@@ -3,9 +3,7 @@ import axios from 'axios';
 function TodoContent(props) {
   const handleClickDelete = async () => {
     try {
-      const res = await axios.delete(
-        'http://localhost:8080/todos/' + props.todo.id
-      );
+      await axios.delete('http://localhost:8080/todos/' + props.todo.id);
       props.fetchTodos();
     } catch (err) {
       console.log(err);
@@ -14,10 +12,10 @@ function TodoContent(props) {
 
   const handleClickToggle = async () => {
     try {
-      const res = await axios.put(
-        'http://localhost:8080/todos/' + props.todo.id,
-        { title: props.todo.title, completed: !props.todo.completed }
-      );
+      await axios.put('http://localhost:8080/todos/' + props.todo.id, {
+        title: props.todo.title,
+        completed: !props.todo.completed
+      });
       props.fetchTodos();
     } catch (err) {
       console.log(err);

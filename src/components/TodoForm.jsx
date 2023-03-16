@@ -1,24 +1,22 @@
 import { useState } from 'react';
-import axios from 'axios';
 
 function TodoForm(props) {
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState(props.initialValue || '');
 
   const handleSubmitForm = async (e) => {
     e.preventDefault();
     // validate first
 
     // success validation
-    try {
-      const res = await axios.post('http://localhost:8080/todos', {
-        title,
-        completed: false
-      });
-      props.fetchTodos();
-      setTitle('');
-    } catch (err) {
-      console.log(err);
-    }
+    props.onSubmit(title);
+    setTitle('');
+    // if create mode
+    // else edit mode
+  };
+
+  const handleClickCancel = () => {
+    setTitle('');
+    props.onCancel?.(); // ? คือ optional chaining มีผลคล้ายๆ if else คือถ้า props ไหนมีค่านี้ก็ให้เรียกใช้ด้วย ถ้าไม่มีก็ไม่ต้อง
   };
 
   return (
@@ -36,7 +34,7 @@ function TodoForm(props) {
         <button
           className="btn btn-outline-secondary"
           type="button"
-          onClick={() => setTitle('')}
+          onClick={handleClickCancel}
         >
           <i className="fa-solid fa-xmark" />
         </button>
