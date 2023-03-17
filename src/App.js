@@ -6,11 +6,15 @@ import TodoForm from './components/TodoForm';
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [triggerFilter, setTriggleFilter] = useState(false);
 
   const fetchTodos = async (queryString = '') => {
     try {
       const res = await axios.get('http://localhost:8080/todos' + queryString);
+      setTriggleFilter(!triggerFilter);
       setTodos(res.data.todos);
+      setTotal(res.data.total);
     } catch (err) {
       console.log(err);
     }
@@ -27,7 +31,7 @@ function App() {
     //   .catch((err) => {
     //     console.log(err);
     //   });
-    fetchTodos();
+    // fetchTodos();
   }, []);
 
   const handleSubmitCreate = async (title) => {
@@ -53,6 +57,8 @@ function App() {
       <TodoContainer
         todos={todos}
         fetchTodos={fetchTodos}
+        total={total}
+        trigger={triggerFilter}
       />
     </div>
   );

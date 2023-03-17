@@ -10,6 +10,8 @@ function TodoContainer(props) {
   const [searchText, setSearchText] = useState('');
   const [searchStatus, setSearchStatus] = useState('');
   const [sort, setSort] = useState('');
+  const [pageLimit, setPageLimit] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     // const queryString = `?title=${searchText}&completed=${searchStatus}&sort=${sort}`;
@@ -23,13 +25,25 @@ function TodoContainer(props) {
     if (sort) {
       queryString.push('sort=' + sort);
     }
+    queryString.push('page=' + currentPage);
+    queryString.push('limit=' + pageLimit);
     props.fetchTodos(queryString.length ? '?' + queryString.join('&') : '');
 
     // const timerId = setTimeout(() => {
     //   props.fetchTodos(queryString.length ? '?' + queryString.join('&') : '');
     // }, 1000);
     // return () => clearTimeout(timerId);
-  }, [searchText, searchStatus, sort, props]);
+  }, [props]);
+
+  useEffect(() => {
+    setSearchText('');
+    setSearchStatus('');
+    setSort('');
+    setPageLimit(5);
+    setCurrentPage(1);
+  }, [props.trigger]);
+
+  const numPage = Math.ceil(props.total / pageLimit);
 
   return (
     <Fragment>
@@ -45,7 +59,13 @@ function TodoContainer(props) {
         />
       </div>
       <div className="my-2 d-flex justify-content-between">
-        <PageLimit />
+        <PageLimit
+          value={pageLimit}
+          onChange={(e) => {
+            setPageLimit(e.target.value);
+            setCurrentPage(1);
+          }}
+        />
         <Sort
           value={sort}
           onChange={(e) => setSort(e.target.value)}
@@ -56,8 +76,20 @@ function TodoContainer(props) {
         fetchTodos={props.fetchTodos}
       />
       <div className="my-2 d-flex justify-content-between align-items-center">
-        <small className="text-muted">Showing 6 to 10 of 12 entries</small>
-        <Pagination />
+        <small className="text-muted">
+          Showing {(currentPage - 1) * pageLimit + 1} to{' '}
+          {pageLimit * currentPage >= props.total
+            ? props.total
+            : pageLimit * currentPage}{' '}
+          of {props.total} entries
+        </small>
+        <Pagination
+          numPage={numPage}
+          currentPage={currentPage}
+          onClick={(page) => {
+            setCurrentPage(page);
+          }}
+        />
       </div>
     </Fragment>
   );
