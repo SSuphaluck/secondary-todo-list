@@ -14,6 +14,7 @@ function TodoList() {
           todo={item}
           editingTodo={editingTodo}
           openEdit={() => setEditingTodo(item)}
+          closeEdit={() => setEditingTodo({})}
         />
       ))}
     </ul>
