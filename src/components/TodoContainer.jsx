@@ -3,7 +3,7 @@ import SearchText from './SearchText';
 import SearchStatus from './SearchStatus';
 import PageLimit from './PageLimit';
 import Sort from './Sort';
-import TodoList from './todoList/TodoList';
+import TodoList from './TodoList';
 import Pagination from './Pagination';
 
 function TodoContainer() {

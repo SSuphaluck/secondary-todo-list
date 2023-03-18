@@ -1,39 +1,18 @@
-import { useEffect, useReducer, useState } from 'react';
-import axios from 'axios';
-import TodoContainer from './components/todoContainer/TodoContainer';
+import { useContext } from 'react';
+import { CREATE_TODO } from './actions/todoAction';
+import TodoContainer from './components/TodoContainer';
 import TodoForm from './components/TodoForm';
-
-function reducer(state, action) {
-  if (action.type === 'LOAD_TODO') {
-    return action.payload.todos;
-    // { type: 'CREATE_TODO', payload: { todo: new object todo } }
-  } else if (action.type === 'CREATE_TODO') {
-    return [action.payload.todo, ...state];
-  }
-}
+import axios from './config/axios';
+import { TodoContext } from './contexts/TodoContext';
 
 function App() {
-  // const [todos, setTodos] = useState([])
-  // const obj = useReducer(reducer, []); // return [current state, dispatchFunction]
-  // dispatchFunction(actionObj) actionObj = { type }
-  // Todo WEB App มี Action ที่อาจจะเกิดขึ้น เช่น Create Todo, Delete Todo, Update Todo
-
-  const [todos, dispatch] = useReducer(reducer, []);
-
-  useEffect(() => {
-    axios
-      .get('http://localhost:8080/todos')
-      .then((res) => {
-        dispatch({ type: 'LOAD_TODO', payload: { todos: res.data.todos } });
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  const { dispatch } = useContext(TodoContext);
 
   const createTodo = (title) => {
     axios
-      .post('http://localhost:8080/todos', { title, completed: false })
+      .post('/todos', { title, completed: false })
       .then((res) => {
-        dispatch({ type: 'CREATE_TODO', payload: { todo: res.data.todo } });
+        dispatch({ type: CREATE_TODO, payload: { todo: res.data.todo } });
       })
       .catch((err) => console.log(err));
   };
