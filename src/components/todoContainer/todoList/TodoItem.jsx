@@ -1,6 +1,7 @@
+import TodoForm from '../../TodoForm';
 import TodoContent from './TodoContent';
 
-function TodoItem({ todo }) {
+function TodoItem({ todo, editingTodo, openEdit }) {
   const { completed } = todo;
   return (
     <li
@@ -8,7 +9,14 @@ function TodoItem({ todo }) {
         completed ? 'success' : 'warning'
       }`}
     >
-      <TodoContent todo={todo} />
+      {editingTodo.id === todo.id ? (
+        <TodoForm />
+      ) : (
+        <TodoContent
+          todo={todo}
+          openEdit={openEdit}
+        />
+      )}
     </li>
   );
 }
